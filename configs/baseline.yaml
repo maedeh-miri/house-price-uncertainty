@@ -1,0 +1,21 @@
+project:
+  name: house-price-uncertainty
+  random_seed: 42
+
+data:
+  target_column: SalePrice
+  test_size: 0.20
+  calibration_size: 0.20
+  dataset_path: data/raw/train.csv
+
+model:
+  name: ridge
+  log_transform_target: true
+  parameters:
+    alpha: 1.0
+
+evaluation:
+  cross_validation_folds: 5
+  interval_confidence: 0.90
+  subgroup_columns:
+    - Neighborhood
