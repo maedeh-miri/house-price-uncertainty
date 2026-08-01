@@ -2,15 +2,15 @@
 
 from .metrics import (
     empirical_coverage,
-    mean_interval_width,
     mean_absolute_error,
+    mean_interval_width,
     root_mean_squared_error,
 )
 
 __all__ = [
     "empirical_coverage",
-    "mean_interval_width",
     "mean_absolute_error",
+    "mean_interval_width",
     "root_mean_squared_error",
 ]
 
