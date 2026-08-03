@@ -1,0 +1,48 @@
+{
+  "target": "Lot Frontage",
+  "dataset_rows": 2930,
+  "observed_target_rows": 2440,
+  "naturally_missing_target_rows": 490,
+  "natural_missing_percentage": 16.723549488054605,
+  "repeated_cv": {
+    "splits": 5,
+    "repeats": 10,
+    "total_evaluations": 50
+  },
+  "conditional_masking": {
+    "repeats": 20,
+    "propensity_group_columns": [
+      "Neighborhood",
+      "Lot Config"
+    ],
+    "propensity_smoothing": 10.0,
+    "note": "Groups with no observed frontage values cannot be directly evaluated."
+  },
+  "model_features": [
+    "Lot Area",
+    "Overall Qual",
+    "Overall Cond",
+    "Year Built",
+    "Year Remod/Add",
+    "1st Flr SF",
+    "Gr Liv Area",
+    "Neighborhood",
+    "Lot Config",
+    "Lot Shape",
+    "Land Contour",
+    "MS Zoning",
+    "Street",
+    "Alley",
+    "Land Slope",
+    "Bldg Type",
+    "House Style"
+  ],
+  "strategies": [
+    "global_median",
+    "neighborhood_median",
+    "lot_config_median",
+    "hierarchical_median",
+    "model_based_hgb"
+  ],
+  "random_seed": 42
+}
