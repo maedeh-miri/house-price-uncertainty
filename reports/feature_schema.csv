@@ -1,0 +1,83 @@
+column,source_dtype,semantic_type,availability_tier,primary_model_decision,missing_count,unique_count
+Order,int64,identifier,metadata,exclude from predictors,0,2930
+PID,int64,identifier,metadata,exclude from predictors,0,2930
+MS SubClass,int64,nominal categorical,core property,keep provisionally,0,16
+MS Zoning,str,nominal categorical,core property,keep provisionally,0,7
+Lot Frontage,float64,numeric,core property,keep provisionally,490,129
+Lot Area,int64,numeric,core property,keep provisionally,0,1960
+Street,str,nominal categorical,core property,keep provisionally,0,2
+Alley,str,nominal categorical,core property,keep provisionally,0,3
+Lot Shape,str,ordinal,core property,keep provisionally,0,4
+Land Contour,str,nominal categorical,core property,keep provisionally,0,4
+Utilities,str,ordinal,core property,keep provisionally,0,3
+Lot Config,str,nominal categorical,core property,keep provisionally,0,5
+Land Slope,str,ordinal,core property,keep provisionally,0,3
+Neighborhood,str,nominal categorical,core property,keep provisionally,0,28
+Condition 1,str,nominal categorical,core property,keep provisionally,0,9
+Condition 2,str,nominal categorical,core property,keep provisionally,0,8
+Bldg Type,str,nominal categorical,core property,keep provisionally,0,5
+House Style,str,nominal categorical,core property,keep provisionally,0,8
+Overall Qual,int64,ordinal,inspection-dependent property,keep provisionally,0,10
+Overall Cond,int64,ordinal,inspection-dependent property,keep provisionally,0,9
+Year Built,int64,numeric,core property,keep provisionally,0,118
+Year Remod/Add,int64,numeric,core property,keep provisionally,0,61
+Roof Style,str,nominal categorical,core property,keep provisionally,0,6
+Roof Matl,str,nominal categorical,core property,keep provisionally,0,8
+Exterior 1st,str,nominal categorical,core property,keep provisionally,0,16
+Exterior 2nd,str,nominal categorical,core property,keep provisionally,0,17
+Mas Vnr Type,str,nominal categorical,core property,keep provisionally,23,6
+Mas Vnr Area,float64,numeric,core property,keep provisionally,23,446
+Exter Qual,str,ordinal,inspection-dependent property,keep provisionally,0,4
+Exter Cond,str,ordinal,inspection-dependent property,keep provisionally,0,5
+Foundation,str,nominal categorical,core property,keep provisionally,0,6
+Bsmt Qual,str,ordinal,inspection-dependent property,keep provisionally,1,7
+Bsmt Cond,str,ordinal,inspection-dependent property,keep provisionally,1,7
+Bsmt Exposure,str,ordinal,inspection-dependent property,keep provisionally,4,6
+BsmtFin Type 1,str,ordinal,inspection-dependent property,keep provisionally,1,8
+BsmtFin SF 1,float64,numeric,core property,keep provisionally,1,996
+BsmtFin Type 2,str,ordinal,inspection-dependent property,keep provisionally,2,8
+BsmtFin SF 2,float64,numeric,core property,keep provisionally,1,275
+Bsmt Unf SF,float64,numeric,core property,keep provisionally,1,1138
+Total Bsmt SF,float64,numeric,core property,keep provisionally,1,1059
+Heating,str,nominal categorical,core property,keep provisionally,0,6
+Heating QC,str,ordinal,inspection-dependent property,keep provisionally,0,5
+Central Air,str,nominal categorical,core property,keep provisionally,0,2
+Electrical,str,nominal categorical,core property,keep provisionally,1,6
+1st Flr SF,int64,numeric,core property,keep provisionally,0,1083
+2nd Flr SF,int64,numeric,core property,keep provisionally,0,635
+Low Qual Fin SF,int64,numeric,core property,keep provisionally,0,36
+Gr Liv Area,int64,numeric,core property,keep provisionally,0,1292
+Bsmt Full Bath,float64,numeric,core property,keep provisionally,2,5
+Bsmt Half Bath,float64,numeric,core property,keep provisionally,2,4
+Full Bath,int64,numeric,core property,keep provisionally,0,5
+Half Bath,int64,numeric,core property,keep provisionally,0,3
+Bedroom AbvGr,int64,numeric,core property,keep provisionally,0,8
+Kitchen AbvGr,int64,numeric,core property,keep provisionally,0,4
+Kitchen Qual,str,ordinal,inspection-dependent property,keep provisionally,0,5
+TotRms AbvGrd,int64,numeric,core property,keep provisionally,0,14
+Functional,str,ordinal,inspection-dependent property,keep provisionally,0,8
+Fireplaces,int64,numeric,core property,keep provisionally,0,5
+Fireplace Qu,str,ordinal,inspection-dependent property,keep provisionally,0,6
+Garage Type,str,nominal categorical,core property,keep provisionally,0,7
+Garage Yr Blt,float64,numeric,core property,keep provisionally,159,104
+Garage Finish,str,ordinal,inspection-dependent property,keep provisionally,2,5
+Garage Cars,float64,numeric,core property,keep provisionally,1,7
+Garage Area,float64,numeric,core property,keep provisionally,1,604
+Garage Qual,str,ordinal,inspection-dependent property,keep provisionally,1,7
+Garage Cond,str,ordinal,inspection-dependent property,keep provisionally,1,7
+Paved Drive,str,ordinal,core property,keep provisionally,0,3
+Wood Deck SF,int64,numeric,core property,keep provisionally,0,380
+Open Porch SF,int64,numeric,core property,keep provisionally,0,252
+Enclosed Porch,int64,numeric,core property,keep provisionally,0,183
+3Ssn Porch,int64,numeric,core property,keep provisionally,0,31
+Screen Porch,int64,numeric,core property,keep provisionally,0,121
+Pool Area,int64,numeric,core property,keep provisionally,0,14
+Pool QC,str,ordinal,inspection-dependent property,keep provisionally,0,5
+Fence,str,nominal categorical,core property,keep provisionally,0,5
+Misc Feature,str,nominal categorical,core property,keep provisionally,0,6
+Misc Val,int64,numeric,core property,keep provisionally,0,38
+Mo Sold,int64,temporal cyclical,transaction context,exclude from primary model,0,12
+Yr Sold,int64,temporal ordered,transaction context,exclude from primary model,0,5
+Sale Type,str,nominal categorical,transaction context,exclude from primary model,0,10
+Sale Condition,str,nominal categorical,transaction context,exclude from primary model,0,6
+SalePrice,int64,target,target,exclude from predictors,0,1032
