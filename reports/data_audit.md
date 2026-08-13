@@ -323,11 +323,18 @@ The experiment is recorded in:
 7. Imputation candidates will be evaluated through downstream model
    performance rather than reconstruction error alone.
 
-## Remaining audit work
+## Remaining preprocessing work
 
-- review identifier columns
-- identify leakage-prone and post-sale variables
-- inspect rare categorical levels
-- define train, calibration, and test splits
-- compare the leading frontage imputers inside the downstream price model
-- document the final evaluation protocol
+The raw-data audit, feature-availability review, and evaluation protocol
+are complete.
+
+The remaining preprocessing work includes:
+
+- define leakage-safe handling for rare and unseen categorical levels;
+- compare the leading `Lot Frontage` imputation candidates inside the
+  downstream `SalePrice` prediction pipeline;
+- finalize missing-value, categorical-encoding, ordinal-encoding, and
+  scaling decisions using training data only.
+
+These decisions belong to the preprocessing stage rather than the
+raw-data audit.

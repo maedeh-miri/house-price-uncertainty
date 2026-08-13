@@ -9,7 +9,7 @@ description = "Leakage-safe house-price prediction with calibrated uncertainty i
 readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}
-authors = [{name = "Project Author"}]
+authors = [{name = "Maedeh Miri"}]
 dependencies = [
   "numpy>=2.0",
   "pandas>=2.2",

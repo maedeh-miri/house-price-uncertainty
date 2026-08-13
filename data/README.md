@@ -28,6 +28,17 @@ The raw dataset is not redistributed through this repository. Users should
 download it from the original source and review the applicable usage and
 redistribution terms.
 
+## Citation
+
+The Ames Housing dataset is described in:
+
+> De Cock, D. (2011). *Ames, Iowa: Alternative to the Boston Housing
+> Data as an End of Semester Regression Project*. Journal of Statistics
+> Education, 19(3), 1–14.
+> DOI: `10.1080/10691898.2011.11889627`
+
+Users of the dataset should cite the original study when appropriate.
+
 ## Expected file location
 
 Place the downloaded file at:
@@ -44,10 +55,7 @@ Run the following commands from the repository root:
 
 ```powershell
 New-Item -ItemType Directory -Force data\raw
-
-Invoke-WebRequest `
-  -Uri "https://jse.amstat.org/v19n3/decock/AmesHousing.txt" `
-  -OutFile "data\raw\AmesHousing.txt"
+Invoke-WebRequest -Uri "https://jse.amstat.org/v19n3/decock/AmesHousing.txt" -OutFile "data\raw\AmesHousing.txt"
 ```
 
 ## File integrity
@@ -83,9 +91,13 @@ data = pd.read_csv(
 ```
 
 Using `keep_default_na=False` is intentional. Some categorical strings such
-as `NA` may represent the absence of a property feature rather than an
-unknown value. Missing-value handling will therefore be defined explicitly
-in the preprocessing pipeline.
+as `NA` represent structural absence of a property feature rather than an
+unknown missing value.
+
+The project therefore keeps structural absence separate from genuine
+missingness. Learned imputation and preprocessing parameters will be fitted
+using training data only and then applied without refitting to calibration
+and test data.
 
 ## Initial validation results
 
@@ -103,14 +115,34 @@ The downloaded file was validated during project development:
 - unique neighborhoods: 28
 - file length: 2,931 lines, including the header row
 
-The next validation stage will examine:
+## Completed audit and evaluation work
 
-- missing-value patterns by column
-- identifier columns
-- suspicious post-sale or leakage-prone variables
-- rare categorical levels
-- inconsistent or impossible feature values
-- reproducible train, calibration, and test splits
+The initial file validation was followed by a structured data audit,
+feature-availability review, and frozen evaluation protocol.
+
+Completed work includes:
+
+- missing-value analysis;
+- structural-absence versus unknown-missing review;
+- identifier and prediction-time leakage auditing;
+- semantic and availability-based feature classification;
+- a dedicated `Lot Frontage` imputation benchmark;
+- a deterministic target-independent 60/20/20 evaluation split;
+- a forward-looking temporal stress-test split;
+- exact partition membership recorded in a committed manifest.
+
+Detailed results are documented in:
+
+- `reports/data_audit.md`
+- `reports/feature_availability.md`
+- `reports/feature_schema.csv`
+- `reports/evaluation_protocol.md`
+- `reports/evaluation_split_manifest.csv`
+
+The full preprocessing strategy is not yet finalized. In particular,
+imputation, categorical encoding, ordinal encoding, and scaling decisions
+must be implemented in a leakage-safe pipeline and learned from training
+data only.
 
 ## Licensing and redistribution
 
