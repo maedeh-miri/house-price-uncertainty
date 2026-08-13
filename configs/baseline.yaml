@@ -1,16 +1,22 @@
 project:
   name: house-price-uncertainty
-  random_seed: 42
 
 data:
+  dataset_path: data/raw/AmesHousing.txt
   target_column: SalePrice
-  test_size: 0.20
-  calibration_size: 0.20
-  dataset_path: data/raw/train.csv
+
+split:
+  primary_protocol: random
+  first_random_state: 42
+  second_random_state: 43
+  temporal:
+    train_end_year: 2008
+    calibration_year: 2009
+    test_year: 2010
 
 model:
   name: ridge
-  log_transform_target: true
+  log_transform_target: false
   parameters:
     alpha: 1.0
 

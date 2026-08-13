@@ -179,21 +179,47 @@ transactions are excluded.
 - `Sale Type`
 - `Sale Condition`
 
-## Leakage controls to implement
+## Implemented leakage controls
 
-- define the predictor schema explicitly
-- prevent identifier columns from entering preprocessing
-- prevent the target from entering feature transformations
-- cast `MS SubClass` to a categorical representation
-- test that excluded transaction columns are absent from the primary model
-- fit all preprocessing operations on training data only
-- evaluate transaction-aware variants separately from the primary model
+The primary-model feature contract is now enforced in code.
 
-## Remaining work
+Implemented controls include:
 
-- audit all remaining columns for prediction-time availability
-- inspect rare categorical levels
-- define the final feature schema
-- implement automated schema and leakage tests
-- define train, calibration, and test splits
-- document the final evaluation protocol
+- an explicit predictor schema;
+- exclusion of `Order` and `PID` from the predictor matrix;
+- separation of `SalePrice` from all feature transformations;
+- exclusion of `Mo Sold`, `Yr Sold`, `Sale Type`, and `Sale Condition`
+  from the primary pre-sale model;
+- conversion of `MS SubClass` to a categorical representation;
+- preservation of identifiers as metadata rather than predictors;
+- automated tests for excluded columns, target separation, metadata
+  separation, categorical handling, and required-column validation;
+- a frozen train/calibration/test evaluation protocol that prevents
+  calibration and test data from being used for model selection.
+
+The implementation is documented in:
+
+- `src/house_price_uncertainty/feature_schema.py`;
+- `tests/test_feature_schema.py`;
+- `reports/feature_schema.csv`;
+- `reports/evaluation_protocol.md`.
+
+## Remaining preprocessing work
+
+The feature-availability and leakage audit is complete for the primary
+pre-sale prediction contract.
+
+Remaining work belongs to the preprocessing and modeling stages:
+
+- define leakage-safe handling for rare and unseen categorical levels;
+- finalize nominal and ordinal encoding strategies;
+- finalize missing-value treatment using training data only;
+- determine model-specific scaling requirements;
+- evaluate candidate preprocessing choices inside the training
+  partition;
+- evaluate market-aware and transaction-aware sensitivity variants
+  separately from the primary model, if those analyses are retained.
+
+Changes to the primary prediction contract or excluded-column policy
+must be treated as explicit protocol revisions rather than informal
+model-development adjustments.
