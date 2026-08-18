@@ -2,7 +2,7 @@
 
 A reproducible machine-learning project for **house-price prediction, uncertainty estimation, subgroup diagnostics, and leakage-safe evaluation**.
 
-> **Status:** Active development — data validation, leakage auditing, and the evaluation protocol are complete; leakage-safe preprocessing is next.
+> **Status:** Active development — data validation, leakage auditing, the evaluation protocol, and leakage-safe preprocessing are complete; point-prediction baselines are next.
 
 ## Why this project exists
 
@@ -275,7 +275,7 @@ However, reconstruction error alone does not determine the final production stra
 * [x] Create the repository scaffold
 * [x] Add tested point and interval metrics
 * [x] Validate the dataset, licensing, and evaluation split
-* [ ] Write a leakage-safe preprocessing pipeline
+* [x] Write a leakage-safe preprocessing pipeline
 * [ ] Establish median and regularized-linear baselines
 * [ ] Train a tree-based model
 * [ ] Add conformal prediction
