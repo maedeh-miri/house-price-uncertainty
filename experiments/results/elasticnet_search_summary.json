@@ -1,0 +1,23 @@
+{
+  "selection_metric": "oof_mae",
+  "secondary_metric": "oof_rmse",
+  "candidate_alphas": [
+    0.001,
+    0.01,
+    0.1,
+    1.0,
+    10.0,
+    100.0,
+    1000.0
+  ],
+  "candidate_l1_ratios": [
+    0.1,
+    0.5,
+    0.9
+  ],
+  "best_alpha": 0.1,
+  "best_l1_ratio": 0.9,
+  "best_oof_mae": 16041.51756481739,
+  "best_oof_rmse": 27852.313009917358,
+  "best_candidate_convergence_warnings": 0
+}
