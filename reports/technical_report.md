@@ -193,9 +193,10 @@ Exact row membership is frozen in:
 
 ## 7. Leakage-safe preprocessing
 
-_In progress._
+The leakage-safe preprocessing pipeline has been implemented and
+validated with automated unit and integration tests.
 
-The preprocessing pipeline will enforce the following principle:
+The pipeline enforces the following principle:
 
 ```text
 Fit preprocessing on training data only
@@ -203,18 +204,41 @@ Fit preprocessing on training data only
 → transform test without refitting
 ```
 
-The pipeline must support:
+The current implementation includes:
 
-- structural-absence semantics;
-- genuine missing-value imputation;
-- unseen categorical levels;
-- nominal categorical encoding;
-- explicit ordinal handling;
-- `MS SubClass` as a categorical feature;
-- optional scaling for models that require it.
+- preservation of structural-absence semantics such as literal `NA`
+  categories;
+- train-only imputation of genuine missing numeric values;
+- hierarchical `Lot Frontage` imputation using training-set
+  `Neighborhood`, `Lot Config`, and global medians;
+- explicit handling of structural garage absence for `Garage Yr Blt`;
+- one-hot encoding for categorical variables;
+- support for categorical levels not observed during training through
+  unknown-category-safe encoding;
+- treatment of `MS SubClass` as a categorical feature rather than a
+  continuous numeric variable;
+- optional numeric scaling for model families that require it.
 
-Preprocessing choices will be developed and compared entirely within
-the training partition.
+The initial pipeline uses one-hot encoding for text-based ordinal
+variables rather than imposing numeric distances between ordinal
+levels. Explicit ordinal encoding remains a candidate for later
+controlled comparison.
+
+The preprocessing implementation is model-agnostic. Scaling can be
+enabled for regularized linear models and disabled for tree-based
+estimators.
+
+Automated tests verify that:
+
+- preprocessing parameters are learned from training data only;
+- calibration and test transformation does not refit learned
+  parameters;
+- unseen categorical levels do not cause transformation failures;
+- train, calibration, and test outputs have compatible feature
+  dimensions;
+- transformed model matrices contain finite values.
+
+The full automated test suite currently contains 48 passing tests.
 
 ## 8. Point-prediction models
 
