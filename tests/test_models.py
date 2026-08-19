@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import pytest
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import ElasticNet, Ridge
 
 from house_price_uncertainty.models import (
     build_elasticnet_pipeline,
+    build_random_forest_pipeline,
     build_ridge_pipeline,
 )
 
@@ -89,4 +91,40 @@ def test_elasticnet_pipeline_rejects_invalid_l1_ratio() -> None:
         build_elasticnet_pipeline(
             alpha=1.0,
             l1_ratio=0.0,
+        )
+
+
+def test_random_forest_pipeline_contains_preprocessing_and_model() -> None:
+    pipeline = build_random_forest_pipeline()
+
+    assert list(pipeline.named_steps) == [
+        "preprocessing",
+        "model",
+    ]
+
+    assert isinstance(
+        pipeline.named_steps["model"],
+        RandomForestRegressor,
+    )
+
+
+def test_random_forest_pipeline_uses_requested_parameters() -> None:
+    pipeline = build_random_forest_pipeline(
+        n_estimators=250,
+        random_state=123,
+    )
+
+    model = pipeline.named_steps["model"]
+
+    assert model.n_estimators == 250
+    assert model.random_state == 123
+
+
+def test_random_forest_pipeline_rejects_nonpositive_estimators() -> None:
+    with pytest.raises(
+        ValueError,
+        match="positive",
+    ):
+        build_random_forest_pipeline(
+            n_estimators=0,
         )
