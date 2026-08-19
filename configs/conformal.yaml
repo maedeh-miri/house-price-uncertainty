@@ -1,0 +1,45 @@
+protocol:
+  name: primary_random
+  train_rows: 1758
+  calibration_rows: 586
+  test_rows: 586
+
+point_model:
+  name: elasticnet
+  alpha: 0.1
+  l1_ratio: 0.9
+  target_scale: raw_sale_price
+  target_transform: none
+
+conformal:
+  method: split_conformal
+  score: absolute_residual
+  interval_type: symmetric
+  nominal_coverage: 0.90
+  quantile_rule: finite_sample_order_statistic
+  quantile_rank: 529
+  clip_lower_bound_at_zero: false
+
+final_evaluation:
+  point_metrics:
+    - mae
+    - rmse
+
+  interval_metrics:
+    - empirical_coverage
+    - covered_count
+    - interval_width
+
+  coverage_interval:
+    closed_lower: true
+    closed_upper: true
+
+  subgroup:
+    column: Neighborhood
+    primary_minimum_n: 50
+    exploratory_minimum_n: 20
+
+temporal_stress_test:
+  reuse_same_model_specification: true
+  reuse_same_conformal_specification: true
+  interpret_coverage_as_empirical_under_shift: true
