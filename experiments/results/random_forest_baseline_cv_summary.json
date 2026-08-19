@@ -1,0 +1,14 @@
+{
+  "protocol": "training-only 5-fold cross-validation",
+  "model": "random_forest",
+  "n_estimators": 500,
+  "random_state": 2026,
+  "outer_training_rows": 1758,
+  "folds": 5,
+  "oof_mae": 16549.286863860445,
+  "oof_rmse": 28042.926487923352,
+  "mean_fold_mae": 16549.085611864375,
+  "std_fold_mae": 1396.7149030560954,
+  "mean_fold_rmse": 27730.521273849525,
+  "std_fold_rmse": 4655.275765136391
+}

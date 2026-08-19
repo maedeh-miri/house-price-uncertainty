@@ -1,0 +1,11 @@
+{
+  "protocol": "training-only 5-fold cross-validation",
+  "outer_training_rows": 1758,
+  "folds": 5,
+  "oof_mae": 54416.94141069397,
+  "oof_rmse": 80011.91938218502,
+  "mean_fold_mae": 54415.920642320634,
+  "std_fold_mae": 2690.371560375334,
+  "mean_fold_rmse": 79776.75085206104,
+  "std_fold_rmse": 6788.954868236906
+}

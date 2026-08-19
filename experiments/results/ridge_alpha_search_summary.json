@@ -1,0 +1,14 @@
+{
+  "selection_metric": "oof_mae",
+  "candidate_alphas": [
+    0.01,
+    0.1,
+    1.0,
+    10.0,
+    100.0,
+    1000.0
+  ],
+  "best_alpha": 10.0,
+  "best_oof_mae": 16063.918505815327,
+  "best_oof_rmse": 27776.03112473435
+}
