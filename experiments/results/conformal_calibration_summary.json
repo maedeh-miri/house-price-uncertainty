@@ -1,0 +1,33 @@
+{
+  "calibration_score_summary": {
+    "maximum": 383777.3348426118,
+    "mean": 15998.077212132399,
+    "median": 10689.186753593764,
+    "minimum": 55.9556280215038
+  },
+  "conformal": {
+    "clip_lower_bound_at_zero": false,
+    "interval_type": "symmetric",
+    "interval_width": 65232.6722054687,
+    "method": "split_conformal",
+    "nominal_coverage": 0.9,
+    "quantile_rank": 529,
+    "radius": 32616.33610273435,
+    "score": "absolute_residual"
+  },
+  "data": {
+    "calibration_rows": 586,
+    "train_rows": 1758
+  },
+  "experiment_id": "experiment_007",
+  "point_model": {
+    "alpha": 0.1,
+    "l1_ratio": 0.9,
+    "name": "elasticnet",
+    "target": "SalePrice",
+    "target_scale": "raw_sale_price",
+    "target_transform": "none"
+  },
+  "protocol": "primary_random",
+  "test_evaluated": false
+}
