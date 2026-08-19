@@ -1,0 +1,227 @@
+{
+  "conformal": {
+    "calibration_rows": 586,
+    "clip_lower_bound_at_zero": false,
+    "interval_type": "symmetric",
+    "method": "split_conformal",
+    "nominal_coverage": 0.9,
+    "quantile_rank": 529,
+    "radius": 32616.33610273435,
+    "score": "absolute_residual"
+  },
+  "data": {
+    "test_rows": 586,
+    "train_rows": 1758
+  },
+  "experiment_id": "experiment_007",
+  "interval_metrics": {
+    "covered_count": 536,
+    "empirical_coverage": 0.9146757679180887,
+    "mean_interval_width": 65232.6722054687,
+    "total_count": 586
+  },
+  "point_metrics": {
+    "mae": 15957.306448929383,
+    "rmse": 33434.090744936184
+  },
+  "point_model": {
+    "alpha": 0.1,
+    "l1_ratio": 0.9,
+    "name": "elasticnet",
+    "target": "SalePrice",
+    "target_scale": "raw_sale_price",
+    "target_transform": "none"
+  },
+  "protocol": "primary_random",
+  "stage": "final_primary_test",
+  "subgroup_policy": {
+    "column": "Neighborhood",
+    "exploratory_minimum_n": 20,
+    "primary_minimum_n": 50
+  },
+  "subgroup_results": [
+    {
+      "covered_count": 4,
+      "empirical_coverage": 0.8,
+      "interpretation": "descriptive_only",
+      "n": 5,
+      "neighborhood": "Blmngtn"
+    },
+    {
+      "covered_count": 1,
+      "empirical_coverage": 1.0,
+      "interpretation": "descriptive_only",
+      "n": 1,
+      "neighborhood": "Blueste"
+    },
+    {
+      "covered_count": 8,
+      "empirical_coverage": 1.0,
+      "interpretation": "descriptive_only",
+      "n": 8,
+      "neighborhood": "BrDale"
+    },
+    {
+      "covered_count": 20,
+      "empirical_coverage": 1.0,
+      "interpretation": "exploratory",
+      "n": 20,
+      "neighborhood": "BrkSide"
+    },
+    {
+      "covered_count": 7,
+      "empirical_coverage": 0.7,
+      "interpretation": "descriptive_only",
+      "n": 10,
+      "neighborhood": "ClearCr"
+    },
+    {
+      "covered_count": 50,
+      "empirical_coverage": 0.9615384615384616,
+      "interpretation": "primary",
+      "n": 52,
+      "neighborhood": "CollgCr"
+    },
+    {
+      "covered_count": 18,
+      "empirical_coverage": 0.8181818181818182,
+      "interpretation": "exploratory",
+      "n": 22,
+      "neighborhood": "Crawfor"
+    },
+    {
+      "covered_count": 44,
+      "empirical_coverage": 0.8979591836734694,
+      "interpretation": "exploratory",
+      "n": 49,
+      "neighborhood": "Edwards"
+    },
+    {
+      "covered_count": 40,
+      "empirical_coverage": 0.975609756097561,
+      "interpretation": "exploratory",
+      "n": 41,
+      "neighborhood": "Gilbert"
+    },
+    {
+      "covered_count": 1,
+      "empirical_coverage": 1.0,
+      "interpretation": "descriptive_only",
+      "n": 1,
+      "neighborhood": "Greens"
+    },
+    {
+      "covered_count": 21,
+      "empirical_coverage": 0.9545454545454546,
+      "interpretation": "exploratory",
+      "n": 22,
+      "neighborhood": "IDOTRR"
+    },
+    {
+      "covered_count": 3,
+      "empirical_coverage": 1.0,
+      "interpretation": "descriptive_only",
+      "n": 3,
+      "neighborhood": "MeadowV"
+    },
+    {
+      "covered_count": 17,
+      "empirical_coverage": 0.85,
+      "interpretation": "exploratory",
+      "n": 20,
+      "neighborhood": "Mitchel"
+    },
+    {
+      "covered_count": 79,
+      "empirical_coverage": 0.9753086419753086,
+      "interpretation": "primary",
+      "n": 81,
+      "neighborhood": "NAmes"
+    },
+    {
+      "covered_count": 8,
+      "empirical_coverage": 1.0,
+      "interpretation": "descriptive_only",
+      "n": 8,
+      "neighborhood": "NPkVill"
+    },
+    {
+      "covered_count": 18,
+      "empirical_coverage": 1.0,
+      "interpretation": "descriptive_only",
+      "n": 18,
+      "neighborhood": "NWAmes"
+    },
+    {
+      "covered_count": 10,
+      "empirical_coverage": 0.7692307692307693,
+      "interpretation": "descriptive_only",
+      "n": 13,
+      "neighborhood": "NoRidge"
+    },
+    {
+      "covered_count": 25,
+      "empirical_coverage": 0.6756756756756757,
+      "interpretation": "exploratory",
+      "n": 37,
+      "neighborhood": "NridgHt"
+    },
+    {
+      "covered_count": 45,
+      "empirical_coverage": 0.9375,
+      "interpretation": "exploratory",
+      "n": 48,
+      "neighborhood": "OldTown"
+    },
+    {
+      "covered_count": 13,
+      "empirical_coverage": 1.0,
+      "interpretation": "descriptive_only",
+      "n": 13,
+      "neighborhood": "SWISU"
+    },
+    {
+      "covered_count": 28,
+      "empirical_coverage": 0.9032258064516129,
+      "interpretation": "exploratory",
+      "n": 31,
+      "neighborhood": "Sawyer"
+    },
+    {
+      "covered_count": 21,
+      "empirical_coverage": 0.9545454545454546,
+      "interpretation": "exploratory",
+      "n": 22,
+      "neighborhood": "SawyerW"
+    },
+    {
+      "covered_count": 36,
+      "empirical_coverage": 1.0,
+      "interpretation": "exploratory",
+      "n": 36,
+      "neighborhood": "Somerst"
+    },
+    {
+      "covered_count": 9,
+      "empirical_coverage": 0.6923076923076923,
+      "interpretation": "descriptive_only",
+      "n": 13,
+      "neighborhood": "StoneBr"
+    },
+    {
+      "covered_count": 8,
+      "empirical_coverage": 0.8,
+      "interpretation": "descriptive_only",
+      "n": 10,
+      "neighborhood": "Timber"
+    },
+    {
+      "covered_count": 2,
+      "empirical_coverage": 1.0,
+      "interpretation": "descriptive_only",
+      "n": 2,
+      "neighborhood": "Veenker"
+    }
+  ],
+  "test_evaluated": true
+}
