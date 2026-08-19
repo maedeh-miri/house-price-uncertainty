@@ -111,12 +111,18 @@ def test_random_forest_pipeline_contains_preprocessing_and_model() -> None:
 def test_random_forest_pipeline_uses_requested_parameters() -> None:
     pipeline = build_random_forest_pipeline(
         n_estimators=250,
+        max_depth=12,
+        min_samples_leaf=3,
+        max_features=0.7,
         random_state=123,
     )
 
     model = pipeline.named_steps["model"]
 
     assert model.n_estimators == 250
+    assert model.max_depth == 12
+    assert model.min_samples_leaf == 3
+    assert model.max_features == pytest.approx(0.7)
     assert model.random_state == 123
 
 
@@ -127,4 +133,24 @@ def test_random_forest_pipeline_rejects_nonpositive_estimators() -> None:
     ):
         build_random_forest_pipeline(
             n_estimators=0,
+        )
+
+
+def test_random_forest_pipeline_rejects_nonpositive_max_depth() -> None:
+    with pytest.raises(
+        ValueError,
+        match="max_depth",
+    ):
+        build_random_forest_pipeline(
+            max_depth=0,
+        )
+
+
+def test_random_forest_pipeline_rejects_nonpositive_min_samples_leaf() -> None:
+    with pytest.raises(
+        ValueError,
+        match="min_samples_leaf",
+    ):
+        build_random_forest_pipeline(
+            min_samples_leaf=0,
         )

@@ -71,11 +71,20 @@ def build_elasticnet_pipeline(
 def build_random_forest_pipeline(
     *,
     n_estimators: int = 500,
+    max_depth: int | None = None,
+    min_samples_leaf: int = 1,
+    max_features: float | str | None = 1.0,
     random_state: int = 2026,
 ) -> Pipeline:
     """Build a leakage-safe Random Forest regression pipeline."""
     if n_estimators <= 0:
         raise ValueError("Random Forest n_estimators must be positive.")
+
+    if max_depth is not None and max_depth <= 0:
+        raise ValueError("Random Forest max_depth must be positive or None.")
+
+    if min_samples_leaf <= 0:
+        raise ValueError("Random Forest min_samples_leaf must be positive.")
 
     return Pipeline(
         steps=[
@@ -89,6 +98,9 @@ def build_random_forest_pipeline(
                 "model",
                 RandomForestRegressor(
                     n_estimators=n_estimators,
+                    max_depth=max_depth,
+                    min_samples_leaf=min_samples_leaf,
+                    max_features=max_features,
                     random_state=random_state,
                     n_jobs=-1,
                 ),

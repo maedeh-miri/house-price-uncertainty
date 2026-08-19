@@ -1,0 +1,24 @@
+{
+  "selection_metric": "oof_mae",
+  "secondary_metric": "oof_rmse",
+  "n_estimators": 500,
+  "random_state": 2026,
+  "candidate_max_depths": [
+    null,
+    16
+  ],
+  "candidate_min_samples_leaves": [
+    1,
+    2,
+    4
+  ],
+  "candidate_max_features": [
+    1.0,
+    0.7
+  ],
+  "best_max_depth": null,
+  "best_min_samples_leaf": 1,
+  "best_max_features": 0.7,
+  "best_oof_mae": 16172.996769434962,
+  "best_oof_rmse": 27366.945273927355
+}
