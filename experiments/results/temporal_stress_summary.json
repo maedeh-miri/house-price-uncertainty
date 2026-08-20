@@ -1,0 +1,29 @@
+{
+  "experiment_id": "experiment_009",
+  "protocol": "temporal_stress_test",
+  "split": {
+    "train_years": "2006-2008",
+    "calibration_year": 2009,
+    "test_year": 2010,
+    "train_rows": 1941,
+    "calibration_rows": 648,
+    "test_rows": 341
+  },
+  "point_model": {
+    "name": "elasticnet",
+    "alpha": 0.1,
+    "l1_ratio": 0.9
+  },
+  "conformal": {
+    "coverage": 0.9,
+    "radius": 36714.443941019854,
+    "quantile_rank": 585,
+    "interval_width": 73428.88788203971
+  },
+  "metrics": {
+    "mae": 16871.761476911586,
+    "rmse": 24855.95902967142,
+    "empirical_coverage": 0.9120234604105572,
+    "mean_interval_width": 73428.8878820397
+  }
+}
