@@ -1,0 +1,40 @@
+{
+  "experiment_id": "experiment_010",
+  "protocol": "conformal_sensitivity_analysis",
+  "point_model": {
+    "name": "elasticnet",
+    "alpha": 0.1,
+    "l1_ratio": 0.9
+  },
+  "split": {
+    "train_rows": 1758,
+    "calibration_rows": 586,
+    "test_rows": 586
+  },
+  "results": [
+    {
+      "nominal_coverage": 0.8,
+      "radius": 21992.907485683332,
+      "empirical_coverage": 0.7866894197952219,
+      "mean_interval_width": 43985.814971366664,
+      "covered_count": 461,
+      "total_count": 586
+    },
+    {
+      "nominal_coverage": 0.9,
+      "radius": 32616.33610273435,
+      "empirical_coverage": 0.9146757679180887,
+      "mean_interval_width": 65232.6722054687,
+      "covered_count": 536,
+      "total_count": 586
+    },
+    {
+      "nominal_coverage": 0.95,
+      "radius": 44651.5797799002,
+      "empirical_coverage": 0.9590443686006825,
+      "mean_interval_width": 89303.1595598004,
+      "covered_count": 562,
+      "total_count": 586
+    }
+  ]
+}
