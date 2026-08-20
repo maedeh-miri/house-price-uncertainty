@@ -2,7 +2,7 @@
 
 A reproducible machine-learning project for **house-price prediction, uncertainty estimation, subgroup diagnostics, and leakage-safe evaluation**.
 
-> **Status:** Active development — the primary point-prediction model, split-conformal calibration, and frozen primary test evaluation are complete. Post-hoc diagnostics and temporal stress testing are next.
+> **Status:** Active development — the primary point-prediction model, split-conformal calibration, frozen primary test evaluation, post-hoc diagnostics, temporal stress testing, and conformal sensitivity analysis are complete. Final documentation and release preparation are in progress.
 
 ## Why this project exists
 
@@ -264,7 +264,7 @@ The primary test partition has now been evaluated once and is considered consume
 
 ### Temporal stress test
 
-A forward-looking secondary protocol is retained:
+A forward-looking secondary protocol was evaluated:
 
 | Partition | Sale years | Rows |
 |---|---|---:|
@@ -276,11 +276,42 @@ A forward-looking secondary protocol is retained:
 
 The temporal protocol is treated as a distribution-shift stress test.
 
-Empirical interval coverage will be reported, but the usual exchangeability-based split-conformal guarantee is not assumed under temporal distribution shift.
+The completed temporal evaluation produced:
+
+| Metric | Result |
+|---|---:|
+| MAE | **$16,871.76** |
+| RMSE | **$24,855.96** |
+| Empirical coverage | **91.20%** |
+| Mean interval width | **$73,428.89** |
+
+The result indicates that the conformal uncertainty procedure maintained close-to-target marginal coverage under a forward-looking temporal split.
+
+The temporal protocol is a secondary robustness analysis. The usual exchangeability-based split-conformal guarantee is not assumed under temporal distribution shift.
 
 The complete evaluation policy is documented in [`reports/evaluation_protocol.md`](reports/evaluation_protocol.md).
 
 Exact row assignments are frozen in [`reports/evaluation_split_manifest.csv`](reports/evaluation_split_manifest.csv).
+
+The complete evaluation policy is documented in [`reports/evaluation_protocol.md`](reports/evaluation_protocol.md).
+
+Exact row assignments are frozen in [`reports/evaluation_split_manifest.csv`](reports/evaluation_split_manifest.csv).
+
+
+## Conformal sensitivity analysis
+
+A secondary sensitivity analysis evaluated different nominal coverage levels while keeping the frozen point model and conformal procedure unchanged.
+
+| Nominal coverage | Empirical coverage | Mean interval width |
+|---|---:|---:|
+| 80% | 78.67% | $43,985.81 |
+| 90% | 91.47% | $65,232.67 |
+| 95% | 95.90% | $89,303.16 |
+
+The 90% conformal configuration remains the primary uncertainty setting because it provides a practical balance between empirical coverage and interval width.
+
+The 95% configuration improves coverage at the cost of substantially wider prediction intervals.
+
 
 ## Conformal prediction protocol
 
@@ -486,8 +517,8 @@ Current limitations include:
 - split conformal targets marginal rather than subgroup-conditional coverage;
 - several neighborhoods have small held-out sample sizes;
 - final-test RMSE is noticeably larger than development OOF RMSE;
-- post-hoc tail-error analysis is still pending;
-- temporal distribution-shift evaluation is still pending;
+- tail-error analysis showed that a small number of large residuals strongly influence RMSE;
+- temporal evaluation was performed as a secondary stress test rather than as the primary selection protocol;
 - the current primary model does not use a transformed target;
 - the project currently focuses on predictive reliability rather than causal interpretation.
 
@@ -510,9 +541,9 @@ Current limitations include:
 - [x] Freeze final interval evaluation metrics
 - [x] Run and record the final primary test evaluation
 - [x] Record Neighborhood-level coverage diagnostics
-- [ ] Complete post-hoc residual and tail-error diagnostics
-- [ ] Run the temporal stress-test protocol
-- [ ] Run secondary 80% / 90% / 95% coverage sensitivity analysis
+- [x] Complete post-hoc residual and tail-error diagnostics
+- [x] Run the temporal stress-test protocol
+- [x] Run secondary 80% / 90% / 95% coverage sensitivity analysis
 - [ ] Complete the technical report
 - [ ] Finalize release documentation and repository cleanup
 - [ ] Create release `v1.0.0`
