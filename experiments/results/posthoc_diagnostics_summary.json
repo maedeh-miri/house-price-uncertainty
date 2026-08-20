@@ -1,0 +1,439 @@
+{
+  "analysis_type": "posthoc_diagnostic",
+  "conformal": {
+    "calibration_rows": 586,
+    "clip_lower_bound_at_zero": false,
+    "interval_type": "symmetric",
+    "method": "split_conformal",
+    "nominal_coverage": 0.9,
+    "quantile_rank": 529,
+    "radius": 32616.33610273435,
+    "score": "absolute_residual"
+  },
+  "conformal_misses": {
+    "covered_observations": {
+      "mae": 11264.407433345517,
+      "n": 536,
+      "rmse": 14091.160308543484
+    },
+    "missed_observations": {
+      "mae": 66265.18389598843,
+      "n": 50,
+      "rmse": 104749.67572745928
+    },
+    "misses_above_upper": 26,
+    "misses_below_lower": 24,
+    "misses_by_training_price_band": {
+      "Q1": 9,
+      "Q2": 6,
+      "Q3": 8,
+      "Q4": 27
+    },
+    "total_misses": 50
+  },
+  "direction_summary": {
+    "exact_prediction": {
+      "fraction": 0.0,
+      "n": 0
+    },
+    "overprediction": {
+      "fraction": 0.4863481228668942,
+      "mae": 16320.962787320615,
+      "mean_signed_residual": -16320.962787320615,
+      "n": 285,
+      "rmse": 40297.019024982874
+    },
+    "underprediction": {
+      "fraction": 0.5136518771331058,
+      "mae": 15612.980680020743,
+      "mean_signed_residual": 15612.980680020743,
+      "n": 301,
+      "rmse": 25273.003723114467
+    }
+  },
+  "experiment_id": "experiment_008",
+  "model_changes_allowed": false,
+  "neighborhood_policy": {
+    "exploratory_minimum_n": 20,
+    "primary_minimum_n": 50
+  },
+  "neighborhood_results": [
+    {
+      "covered_count": 4,
+      "empirical_coverage": 0.8,
+      "interpretation": "descriptive_only",
+      "mae": 15331.158789156174,
+      "mean_signed_residual": -5374.411360724649,
+      "n": 5,
+      "neighborhood": "Blmngtn",
+      "rmse": 20148.926617622183
+    },
+    {
+      "covered_count": 1,
+      "empirical_coverage": 1.0,
+      "interpretation": "descriptive_only",
+      "mae": 11284.410097887565,
+      "mean_signed_residual": 11284.410097887565,
+      "n": 1,
+      "neighborhood": "Blueste",
+      "rmse": 11284.410097887565
+    },
+    {
+      "covered_count": 8,
+      "empirical_coverage": 1.0,
+      "interpretation": "descriptive_only",
+      "mae": 5045.360276867825,
+      "mean_signed_residual": 1400.592617193808,
+      "n": 8,
+      "neighborhood": "BrDale",
+      "rmse": 6673.7781854426585
+    },
+    {
+      "covered_count": 20,
+      "empirical_coverage": 1.0,
+      "interpretation": "exploratory",
+      "mae": 9869.005618345478,
+      "mean_signed_residual": -460.2789608909567,
+      "n": 20,
+      "neighborhood": "BrkSide",
+      "rmse": 11980.715025001233
+    },
+    {
+      "covered_count": 7,
+      "empirical_coverage": 0.7,
+      "interpretation": "descriptive_only",
+      "mae": 28841.866933943085,
+      "mean_signed_residual": -24198.11519112852,
+      "n": 10,
+      "neighborhood": "ClearCr",
+      "rmse": 32461.831717843073
+    },
+    {
+      "covered_count": 50,
+      "empirical_coverage": 0.9615384615384616,
+      "interpretation": "primary",
+      "mae": 10209.49583260727,
+      "mean_signed_residual": 73.34292392725882,
+      "n": 52,
+      "neighborhood": "CollgCr",
+      "rmse": 14364.695889418908
+    },
+    {
+      "covered_count": 18,
+      "empirical_coverage": 0.8181818181818182,
+      "interpretation": "exploratory",
+      "mae": 18711.379719554956,
+      "mean_signed_residual": 5565.2813899890325,
+      "n": 22,
+      "neighborhood": "Crawfor",
+      "rmse": 24380.77204568851
+    },
+    {
+      "covered_count": 44,
+      "empirical_coverage": 0.8979591836734694,
+      "interpretation": "exploratory",
+      "mae": 26419.15824654555,
+      "mean_signed_residual": -15390.348023388704,
+      "n": 49,
+      "neighborhood": "Edwards",
+      "rmse": 86808.58345960939
+    },
+    {
+      "covered_count": 40,
+      "empirical_coverage": 0.975609756097561,
+      "interpretation": "exploratory",
+      "mae": 10576.364818039148,
+      "mean_signed_residual": 3727.2578621445523,
+      "n": 41,
+      "neighborhood": "Gilbert",
+      "rmse": 13851.695077686321
+    },
+    {
+      "covered_count": 1,
+      "empirical_coverage": 1.0,
+      "interpretation": "descriptive_only",
+      "mae": 6009.998180780298,
+      "mean_signed_residual": 6009.998180780298,
+      "n": 1,
+      "neighborhood": "Greens",
+      "rmse": 6009.998180780298
+    },
+    {
+      "covered_count": 21,
+      "empirical_coverage": 0.9545454545454546,
+      "interpretation": "exploratory",
+      "mae": 12586.508951632539,
+      "mean_signed_residual": -2620.231400758875,
+      "n": 22,
+      "neighborhood": "IDOTRR",
+      "rmse": 15909.857252690215
+    },
+    {
+      "covered_count": 3,
+      "empirical_coverage": 1.0,
+      "interpretation": "descriptive_only",
+      "mae": 15812.82889602976,
+      "mean_signed_residual": 15812.82889602976,
+      "n": 3,
+      "neighborhood": "MeadowV",
+      "rmse": 16091.113705410933
+    },
+    {
+      "covered_count": 17,
+      "empirical_coverage": 0.85,
+      "interpretation": "exploratory",
+      "mae": 17448.549834992402,
+      "mean_signed_residual": 3442.5896055930048,
+      "n": 20,
+      "neighborhood": "Mitchel",
+      "rmse": 21480.600119941122
+    },
+    {
+      "covered_count": 79,
+      "empirical_coverage": 0.9753086419753086,
+      "interpretation": "primary",
+      "mae": 11878.0374754715,
+      "mean_signed_residual": -3591.293827495243,
+      "n": 81,
+      "neighborhood": "NAmes",
+      "rmse": 16509.817171710954
+    },
+    {
+      "covered_count": 8,
+      "empirical_coverage": 1.0,
+      "interpretation": "descriptive_only",
+      "mae": 6465.7647487606355,
+      "mean_signed_residual": 1468.942544958567,
+      "n": 8,
+      "neighborhood": "NPkVill",
+      "rmse": 7174.552109415436
+    },
+    {
+      "covered_count": 18,
+      "empirical_coverage": 1.0,
+      "interpretation": "descriptive_only",
+      "mae": 11954.887340332194,
+      "mean_signed_residual": -385.8490112066833,
+      "n": 18,
+      "neighborhood": "NWAmes",
+      "rmse": 15117.323820009371
+    },
+    {
+      "covered_count": 10,
+      "empirical_coverage": 0.7692307692307693,
+      "interpretation": "descriptive_only",
+      "mae": 31658.153294388085,
+      "mean_signed_residual": 18339.064518165538,
+      "n": 13,
+      "neighborhood": "NoRidge",
+      "rmse": 48704.644176887625
+    },
+    {
+      "covered_count": 25,
+      "empirical_coverage": 0.6756756756756757,
+      "interpretation": "exploratory",
+      "mae": 31985.89646455112,
+      "mean_signed_residual": 10122.233854388493,
+      "n": 37,
+      "neighborhood": "NridgHt",
+      "rmse": 48938.55976678407
+    },
+    {
+      "covered_count": 45,
+      "empirical_coverage": 0.9375,
+      "interpretation": "exploratory",
+      "mae": 15605.616556281306,
+      "mean_signed_residual": 3567.3615750085614,
+      "n": 48,
+      "neighborhood": "OldTown",
+      "rmse": 19207.6482040767
+    },
+    {
+      "covered_count": 13,
+      "empirical_coverage": 1.0,
+      "interpretation": "descriptive_only",
+      "mae": 9429.94358910243,
+      "mean_signed_residual": -2545.607406058155,
+      "n": 13,
+      "neighborhood": "SWISU",
+      "rmse": 10572.353866804808
+    },
+    {
+      "covered_count": 28,
+      "empirical_coverage": 0.9032258064516129,
+      "interpretation": "exploratory",
+      "mae": 14695.16855699608,
+      "mean_signed_residual": -2537.72556780183,
+      "n": 31,
+      "neighborhood": "Sawyer",
+      "rmse": 21790.061819742285
+    },
+    {
+      "covered_count": 21,
+      "empirical_coverage": 0.9545454545454546,
+      "interpretation": "exploratory",
+      "mae": 10358.876754932759,
+      "mean_signed_residual": 3469.0538359898255,
+      "n": 22,
+      "neighborhood": "SawyerW",
+      "rmse": 14677.978177893223
+    },
+    {
+      "covered_count": 36,
+      "empirical_coverage": 1.0,
+      "interpretation": "exploratory",
+      "mae": 11598.460441585772,
+      "mean_signed_residual": 1674.5446242663902,
+      "n": 36,
+      "neighborhood": "Somerst",
+      "rmse": 14230.562839000851
+    },
+    {
+      "covered_count": 9,
+      "empirical_coverage": 0.6923076923076923,
+      "interpretation": "descriptive_only",
+      "mae": 30353.96534167873,
+      "mean_signed_residual": 10250.08624317812,
+      "n": 13,
+      "neighborhood": "StoneBr",
+      "rmse": 44327.90705688914
+    },
+    {
+      "covered_count": 8,
+      "empirical_coverage": 0.8,
+      "interpretation": "descriptive_only",
+      "mae": 17281.854683907623,
+      "mean_signed_residual": 8054.471978042377,
+      "n": 10,
+      "neighborhood": "Timber",
+      "rmse": 21577.191290636823
+    },
+    {
+      "covered_count": 2,
+      "empirical_coverage": 1.0,
+      "interpretation": "descriptive_only",
+      "mae": 11352.424399497992,
+      "mean_signed_residual": -11352.424399497992,
+      "n": 2,
+      "neighborhood": "Veenker",
+      "rmse": 14652.748093004264
+    }
+  ],
+  "overall_residuals": {
+    "absolute_error": {
+      "maximum": 594968.4607863729,
+      "median": 10730.879084827422,
+      "p75": 19209.5415098409,
+      "p90": 31704.04169860913,
+      "p95": 41391.118300315655,
+      "p99": 89637.29798475611,
+      "quantile_method": "linear"
+    },
+    "mae": 15957.306448929383,
+    "maximum_residual": 165742.8668942122,
+    "mean_residual": 81.96721894175532,
+    "median_residual": 516.3865616350158,
+    "minimum_residual": -594968.4607863729,
+    "n": 586,
+    "residual_standard_deviation": 33433.990269120535,
+    "residual_standard_deviation_ddof": 0,
+    "rmse": 33434.090744936184
+  },
+  "point_model": {
+    "alpha": 0.1,
+    "l1_ratio": 0.9,
+    "name": "elasticnet",
+    "target": "SalePrice",
+    "target_transform": "none"
+  },
+  "price_band_definition": {
+    "assignment_rule": "Q1 <= q25; Q2 = (q25, q50]; Q3 = (q50, q75]; Q4 > q75",
+    "boundaries": {
+      "q25": 129425.0,
+      "q50": 160100.0,
+      "q75": 210000.0
+    },
+    "source": "frozen primary training target"
+  },
+  "price_band_results": [
+    {
+      "band": "Q1",
+      "covered_count": 145,
+      "empirical_coverage": 0.9415584415584416,
+      "mae": 13819.975906884038,
+      "mean_signed_residual": -2696.524907067246,
+      "mean_true_sale_price": 105783.40909090909,
+      "n": 154,
+      "rmse": 18373.907193437506
+    },
+    {
+      "band": "Q2",
+      "covered_count": 143,
+      "empirical_coverage": 0.959731543624161,
+      "mae": 14498.885198974289,
+      "mean_signed_residual": -4662.685218705874,
+      "mean_true_sale_price": 143785.0402684564,
+      "n": 149,
+      "rmse": 50720.48754919036
+    },
+    {
+      "band": "Q3",
+      "covered_count": 118,
+      "empirical_coverage": 0.9365079365079365,
+      "mae": 12622.716679217378,
+      "mean_signed_residual": -3913.9784727158685,
+      "mean_true_sale_price": 184547.88888888888,
+      "n": 126,
+      "rmse": 17494.05607407264
+    },
+    {
+      "band": "Q4",
+      "covered_count": 130,
+      "empirical_coverage": 0.8280254777070064,
+      "mae": 22114.070657222408,
+      "mean_signed_residual": 10517.19115374267,
+      "mean_true_sale_price": 289611.59872611467,
+      "n": 157,
+      "rmse": 33971.60131609895
+    }
+  ],
+  "primary_system_frozen": true,
+  "protocol": "primary_random",
+  "reproduced_frozen_metrics": {
+    "covered_count": 536,
+    "empirical_coverage": 0.9146757679180887,
+    "mae": 15957.306448929383,
+    "mean_interval_width": 65232.6722054687,
+    "rmse": 33434.090744936184,
+    "test_rows": 586
+  },
+  "rmse_tail_sensitivity": {
+    "fractions": {
+      "10_percent": {
+        "fraction_requested": 0.1,
+        "remaining_count": 527,
+        "removed_count": 59,
+        "rmse_after_removal": 13580.119578715357
+      },
+      "1_percent": {
+        "fraction_requested": 0.01,
+        "remaining_count": 580,
+        "removed_count": 6,
+        "rmse_after_removal": 18981.31344289387
+      },
+      "5_percent": {
+        "fraction_requested": 0.05,
+        "remaining_count": 556,
+        "removed_count": 30,
+        "rmse_after_removal": 15476.226536973409
+      }
+    },
+    "full_test_rmse": 33434.090744936184,
+    "removal_rule": "ceil(test_rows * fraction), ranked by descending absolute error with Order ascending as tie-breaker"
+  },
+  "stage": "posthoc_primary_test_diagnostics",
+  "top_error_policy": {
+    "count": 10,
+    "ranking": "absolute_error descending, Order ascending tie-breaker"
+  }
+}
