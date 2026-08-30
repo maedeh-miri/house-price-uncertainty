@@ -2,29 +2,36 @@
 
 ## Abstract
 
-_To be completed after the final model and conformal experiments._
+This project develops and evaluates a reproducible machine-learning workflow for residential sale-price prediction with calibrated uncertainty estimates.
+
+The study uses the Ames Housing dataset and places particular emphasis on leakage prevention, explicit evaluation roles, pre-specified model selection, split conformal prediction, subgroup reliability, and robustness under temporal distribution shift.
+
+A deterministic 60/20/20 primary split separates model development, conformal calibration, and final testing. Model selection is performed using five-fold cross-validation on the training partition only. Among the evaluated point-prediction models, ElasticNet achieved the lowest pre-specified cross-validated MAE and was frozen as the primary point model before the final test evaluation.
+
+On the held-out primary test set, the final ElasticNet model achieved an MAE of $15,957.31 and an RMSE of $33,434.09. A pre-registered 90% split-conformal interval achieved 91.47% empirical coverage, with a mean interval width of $65,232.67.
+
+Post-hoc diagnostics showed that a relatively small number of large residuals strongly influenced RMSE. Secondary analyses examined neighborhood-level coverage, temporal robustness, and conformal sensitivity across 80%, 90%, and 95% nominal coverage levels.
+
+The project is intended as a study of reliable tabular regression rather than an exhaustive model leaderboard.
 
 ## 1. Introduction
 
-A house-price estimate is more useful when accompanied by an honest
-indication of uncertainty. This project studies point-prediction
-quality, calibrated prediction intervals, subgroup reliability, and
-performance under temporal distribution shift.
+A house-price estimate is more useful when accompanied by information about how uncertain that estimate is.
 
-The primary prediction contract estimates expected residential market
-value before the transaction is finalized.
+This project therefore studies two related questions:
 
-The project is designed to answer not only whether a model can predict
-house prices accurately, but also whether its uncertainty estimates
-remain informative across different properties, neighborhoods, and
-evaluation settings.
+1. How accurately can residential sale prices be predicted under a leakage-safe and reproducible evaluation protocol?
+2. How reliable are the associated prediction intervals, both overall and under selected subgroup and temporal stress analyses?
+
+The project emphasizes evaluation discipline rather than maximizing a single leaderboard metric. Preprocessing, model selection, conformal calibration, final testing, and post-hoc analysis are assigned distinct roles so that information from the final test set does not influence the primary model or uncertainty procedure.
+
+The primary prediction contract is to estimate `SalePrice` before the transaction is finalized.
 
 ## 2. Dataset and provenance
 
-The project uses the full Ames Housing dataset distributed with the
-Ames Housing study.
+The project uses the full Ames Housing dataset.
 
-The validated source contains:
+The validated dataset contains:
 
 - 2,930 residential property sales;
 - 82 columns;
@@ -33,287 +40,417 @@ The validated source contains:
 
 The raw dataset is not redistributed through this repository.
 
-Download instructions, source information, loading semantics, and the
-expected SHA256 checksum are documented in `data/README.md`.
+Source information, download instructions, loading semantics, and the expected SHA256 checksum are documented in:
 
-Literal categorical values such as `NA` are preserved because they can
-represent structural absence rather than unknown missingness.
+`data/README.md`
 
-A detailed dataset audit is available in:
+A detailed audit is available in:
 
 `reports/data_audit.md`
 
-## 3. Prediction contract and leakage controls
+### 2.1 Missing-value semantics
 
-The primary model estimates expected residential market value before
-the transaction is finalized.
+The dataset contains both genuine missing values and categorical values that represent structural absence.
+
+Literal categorical values such as `NA` are therefore preserved during loading rather than automatically interpreted as missing values.
+
+This distinction is important for features describing garages, basements, pools, alleys, and other property components that may simply not exist.
+
+The validated audit identified 21 columns containing genuine missing values, with 719 genuine missing cells across 661 rows.
+
+## 3. Prediction contract and feature availability
 
 The following columns are excluded from the primary predictor matrix:
 
+- `SalePrice`;
 - `Order`;
 - `PID`;
 - `Mo Sold`;
 - `Yr Sold`;
 - `Sale Type`;
-- `Sale Condition`;
-- `SalePrice`.
+- `Sale Condition`.
 
 `SalePrice` is the prediction target.
 
-`Order` and `PID` are retained as metadata rather than predictive
-features.
+`Order` and `PID` are retained as metadata rather than predictive features.
 
-Transaction-context variables are excluded from the primary model
-because their availability is not guaranteed at pre-sale prediction
-time. This exclusion does not imply that the variables are inherently
-invalid; they may be evaluated later through explicitly defined
-sensitivity analyses.
+`Yr Sold` is excluded from the primary feature matrix but is retained for construction of the secondary temporal stress-test split.
 
-The complete feature-availability and semantic-role decisions are
-documented in:
+Transaction-context variables are excluded because their availability is not guaranteed under the pre-sale prediction contract.
+
+After exclusions, the primary model uses 75 predictors.
+
+`MS SubClass` is treated as a categorical variable rather than as a continuous numeric quantity.
+
+The complete feature decisions are documented in:
 
 - `reports/feature_availability.md`;
 - `reports/feature_schema.csv`.
 
-## 4. Missing-data analysis
+## 4. Leakage-safe preprocessing
 
-The dataset contains both genuine missing values and categorical
-values representing structural absence.
+All learned preprocessing operations are fitted on training data only.
 
-The project therefore distinguishes:
+The central rule is:
 
 ```text
-structural absence
-!=
-unknown missingness
+fit preprocessing on training data
+-> transform calibration without refitting
+-> transform test without refitting
 ```
 
-Examples include properties without garages, basements, pools, or
-other features.
+The final preprocessing pipeline includes:
 
-This distinction is preserved during loading and will be respected by
-the preprocessing pipeline rather than applying a single global
-missing-value rule.
+- preservation of literal structural-absence categories such as `NA`;
+- train-only hierarchical imputation of `Lot Frontage`;
+- explicit treatment of structural garage absence for `Garage Yr Blt`;
+- train-only median imputation for remaining numeric missing values;
+- an explicit `__MISSING__` category for genuine categorical missingness;
+- one-hot encoding of categorical predictors;
+- `handle_unknown="ignore"` behavior for previously unseen categories;
+- categorical treatment of `MS SubClass`;
+- optional numeric scaling for model families that require it.
 
-Detailed findings are documented in:
+### 4.1 Lot Frontage preprocessing experiment
 
-`reports/data_audit.md`
+A preliminary experiment compared several strategies for reconstructing missing `Lot Frontage` values:
 
-## 5. Preliminary preprocessing experiment
-
-A dedicated experiment investigated reconstruction strategies for
-`Lot Frontage`, which contains substantial genuine missingness.
-
-The experiment compared:
-
-- global median imputation;
-- `Lot Config` median imputation;
-- `Neighborhood` median imputation;
-- hierarchical median imputation;
+- global median;
+- `Lot Config` median;
+- `Neighborhood` median;
+- hierarchical medians;
 - HistGradientBoosting-based reconstruction.
 
-The model-based approach produced the strongest reconstruction results
-in the preliminary benchmark, while hierarchical median imputation was
-the strongest simple baseline.
+The model-based reconstruction produced the strongest reconstruction score in that isolated experiment.
 
-These results are treated as preprocessing research rather than a final
-production decision.
+However, the production pipeline deliberately uses a simpler, leakage-safe hierarchical strategy fitted on training data only:
 
-The experiment was performed before the final evaluation protocol was
-frozen. Any learned production imputer must therefore be fitted using
-training data only.
+```text
+Neighborhood median
+-> Lot Config median
+-> global training median
+```
 
-Final preprocessing choices must also be evaluated according to their
-downstream effect on:
+The reconstruction experiment is treated as preprocessing research, not as evidence for changing the final point-prediction model.
 
-- `SalePrice` prediction;
-- model stability;
-- conformal interval coverage;
-- interval width;
-- pipeline complexity.
+## 5. Evaluation protocol
 
-## 6. Evaluation protocol
+The evaluation protocol was frozen before final model testing.
 
-The evaluation design is frozen before final model fitting.
+### 5.1 Primary random split
 
-### 6.1 Primary random protocol
+The primary evaluation uses a deterministic, target-independent 60/20/20 split:
 
-The primary evaluation uses a deterministic, target-independent
-60/20/20 split:
+| Partition | Rows | Percentage | Role |
+|---|---:|---:|---|
+| Train | 1,758 | 60% | Development and model selection |
+| Calibration | 586 | 20% | Conformal calibration |
+| Test | 586 | 20% | Final held-out evaluation |
 
-| Partition | Rows | Percentage |
-|---|---:|---:|
-| Train | 1,758 | 60% |
-| Calibration | 586 | 20% |
-| Test | 586 | 20% |
+Partition membership is based on stable identifiers and fixed random states.
 
-Partition membership is generated using stable `Order` identifiers and
-fixed random states `42` and `43`.
-
-The split does not require or inspect `SalePrice` and is independent of
-input DataFrame row order.
-
-### 6.2 Partition roles
-
-The training partition is used for:
-
-- preprocessing development;
-- cross-validation;
-- feature engineering;
-- model-family comparison;
-- hyperparameter selection;
-- final point-model fitting.
-
-The calibration partition is reserved for conformal calibration.
-
-The test partition is reserved for final evaluation.
-
-### 6.3 Temporal stress test
-
-A secondary forward-looking protocol evaluates temporal distribution
-shift:
-
-| Partition | Sale years | Rows |
-|---|---|---:|
-| Train | 2006–2008 | 1,941 |
-| Calibration | 2009 | 648 |
-| Test | 2010 | 341 |
-
-The temporal protocol is treated as a stress test. Empirical conformal
-coverage will be reported, but a distribution-free coverage guarantee
-is not assumed under temporal distribution shift.
-
-The complete protocol is documented in:
-
-`reports/evaluation_protocol.md`
+The split does not inspect `SalePrice` and does not depend on the input DataFrame row order.
 
 Exact row membership is frozen in:
 
 `reports/evaluation_split_manifest.csv`
 
-## 7. Leakage-safe preprocessing
+The complete protocol is documented in:
 
-The leakage-safe preprocessing pipeline has been implemented and
-validated with automated unit and integration tests.
+`reports/evaluation_protocol.md`
 
-The pipeline enforces the following principle:
+### 5.2 Partition roles
+
+The training partition is used for:
+
+- preprocessing development;
+- cross-validation;
+- model-family comparison;
+- hyperparameter selection;
+- final point-model fitting.
+
+The calibration partition is used only to estimate the conformal nonconformity threshold after the point model is frozen.
+
+The test partition is reserved for the final primary evaluation.
+
+### 5.3 Development cross-validation
+
+Point models are compared using deterministic five-fold K-fold cross-validation on the training partition only.
+
+Configuration:
 
 ```text
-Fit preprocessing on training data only
-→ transform calibration without refitting
-→ transform test without refitting
+n_splits = 5
+shuffle = True
+random_state = 2026
 ```
 
-The current implementation includes:
+The pre-specified primary model-selection metric is Mean Absolute Error (MAE).
 
-- preservation of structural-absence semantics such as literal `NA`
-  categories;
-- train-only imputation of genuine missing numeric values;
-- hierarchical `Lot Frontage` imputation using training-set
-  `Neighborhood`, `Lot Config`, and global medians;
-- explicit handling of structural garage absence for `Garage Yr Blt`;
-- one-hot encoding for categorical variables;
-- support for categorical levels not observed during training through
-  unknown-category-safe encoding;
-- treatment of `MS SubClass` as a categorical feature rather than a
-  continuous numeric variable;
-- optional numeric scaling for model families that require it.
+RMSE is reported as a secondary metric.
 
-The initial pipeline uses one-hot encoding for text-based ordinal
-variables rather than imposing numeric distances between ordinal
-levels. Explicit ordinal encoding remains a candidate for later
-controlled comparison.
+## 6. Point-model selection
 
-The preprocessing implementation is model-agnostic. Scaling can be
-enabled for regularized linear models and disabled for tree-based
-estimators.
+The model comparison intentionally includes simple, regularized linear, and nonlinear tree-based baselines rather than attempting an exhaustive state-of-the-art benchmark.
 
-Automated tests verify that:
+The principal development results were:
 
-- preprocessing parameters are learned from training data only;
-- calibration and test transformation does not refit learned
-  parameters;
-- unseen categorical levels do not cause transformation failures;
-- train, calibration, and test outputs have compatible feature
-  dimensions;
-- transformed model matrices contain finite values.
+| Model | OOF MAE | OOF RMSE |
+|---|---:|---:|
+| Median baseline | $54,416.94 | $80,011.92 |
+| Ridge | $16,063.92 | $27,776.03 |
+| ElasticNet | **$16,041.52** | $27,852.31 |
+| Tuned Random Forest | $16,173.00 | **$27,366.95** |
 
-The full automated test suite currently contains 48 passing tests.
+The tuned Random Forest achieved the lowest OOF RMSE.
 
-## 8. Point-prediction models
+ElasticNet achieved the lowest OOF MAE, which was the pre-specified primary selection metric, and was therefore selected as the primary point-prediction model.
 
-_Planned._
+The frozen ElasticNet configuration is:
 
-The initial model sequence will include:
+```text
+alpha = 0.1
+l1_ratio = 0.9
+target = raw SalePrice
+```
 
-1. a simple median-prediction baseline;
-2. regularized linear regression;
-3. a tree-based model.
+No target transformation is used in the primary model.
 
-Candidate target transformations such as `log1p(SalePrice)` will be
-treated as experimental choices rather than assumed defaults.
+The Ridge and ElasticNet results are very close, so the results should not be interpreted as evidence of a large performance advantage for ElasticNet. The selection follows the pre-declared metric rather than a claim of model-family dominance.
 
-Model selection will occur inside the training partition.
+## 7. Split conformal prediction
 
-## 9. Conformal prediction
+After freezing the point model, split conformal prediction is used to construct prediction intervals.
 
-_Planned._
+The primary conformal procedure uses absolute residual scores:
 
-After the point-prediction model is frozen, the calibration partition
-will be used to estimate conformal nonconformity quantiles.
+```text
+score_i = |y_i - y_hat_i|
+```
 
-Final uncertainty evaluation will consider:
+For nominal coverage of 90% and a calibration set of 586 observations, the finite-sample conformal rank is:
 
-- empirical interval coverage;
-- mean and median interval width;
-- coverage by price range;
-- coverage by neighborhood;
-- behavior under temporal distribution shift.
+```text
+ceil((n + 1) * 0.90) = 529
+```
 
-## 10. Subgroup evaluation
+The resulting calibration radius is:
 
-Neighborhood-level interval performance will be interpreted according
-to subgroup size.
+```text
+q_hat = $32,616.34
+```
+
+For a point prediction `y_hat`, the symmetric prediction interval is:
+
+```text
+[y_hat - q_hat, y_hat + q_hat]
+```
+
+The corresponding interval width is:
+
+```text
+$65,232.67
+```
+
+The 90% operating point was specified as the primary conformal setting before sensitivity analysis.
+
+Under the standard exchangeability assumptions of split conformal prediction, the procedure targets marginal rather than subgroup-conditional coverage.
+
+## 8. Primary held-out evaluation
+
+The primary test set was evaluated after the point model and conformal procedure had been frozen.
+
+The test set contains 586 observations.
+
+### 8.1 Point-prediction performance
+
+| Metric | Test result |
+|---|---:|
+| MAE | $15,957.31 |
+| RMSE | $33,434.09 |
+
+The test MAE is close to the training-only OOF estimate of $16,041.52, indicating similar typical absolute-error performance between development and final evaluation.
+
+The test RMSE is higher than the OOF RMSE, indicating greater influence from large residuals in the held-out test partition.
+
+### 8.2 Primary conformal performance
+
+| Metric | Result |
+|---|---:|
+| Nominal coverage | 90.00% |
+| Empirical coverage | **91.47%** |
+| Covered observations | 536 / 586 |
+| Missed observations | 50 / 586 |
+| Conformal radius | $32,616.34 |
+| Mean interval width | $65,232.67 |
+
+The pre-registered 90% split-conformal interval achieved 91.47% empirical coverage on the held-out primary test set.
+
+This is the primary uncertainty result of the project.
+
+## 9. Subgroup reliability analysis
+
+Neighborhood is the primary subgroup variable.
+
+To avoid over-interpreting small samples, subgroup results use the following interpretation policy:
 
 | Test subgroup size | Interpretation |
 |---:|---|
-| `n >= 50` | Primary interpretation |
-| `20 <= n < 50` | Exploratory interpretation with warning |
-| `n < 20` | Raw count and coverage only |
+| `n >= 50` | Primary |
+| `20 <= n < 50` | Exploratory, with warning |
+| `n < 20` | Descriptive only |
 
-Small groups will not be removed from evaluation.
+Among neighborhoods meeting the primary sample-size threshold:
 
-Subgroup reports should include sample size, empirical coverage, and
-interval width where appropriate.
+| Neighborhood | n | Empirical coverage |
+|---|---:|---:|
+| CollgCr | 52 | 96.15% |
+| NAmes | 81 | 97.53% |
 
-## 11. Final experiments and results
+An exploratory result of particular interest was:
 
-_To be completed after preprocessing, model selection, and conformal
-calibration._
+| Neighborhood | n | Empirical coverage |
+|---|---:|---:|
+| NridgHt | 37 | 67.57% |
 
-No final predictive or uncertainty results are reported at the current
-stage.
+Because `NridgHt` contains fewer than 50 primary-test observations, this result is treated as exploratory rather than as strong evidence of systematic conditional undercoverage.
 
-## 12. Error analysis
+The overall conformal guarantee is marginal; subgroup-conditional coverage is not guaranteed.
 
-_To be completed after final model evaluation._
+## 10. Post-hoc error diagnostics
 
-The analysis will examine where predictive error and interval behavior
-are weakest rather than reporting aggregate metrics alone.
+Post-hoc diagnostics were performed only after the frozen primary test evaluation.
 
-## 13. Limitations
+These analyses are diagnostic and do not modify the primary model, preprocessing pipeline, conformal radius, nominal coverage, or evaluation protocol.
 
-Current known limitations include:
+The main observation is that typical absolute-error performance generalized closely from OOF development estimates to the primary test set, while test RMSE increased substantially because of tail errors.
 
-- heterogeneous meanings of missing values;
-- rare and unseen categorical levels;
-- relatively small calibration and subgroup sample sizes;
-- possible temporal distribution shift;
-- high-dimensional representations after categorical encoding;
-- lack of a guarantee of subgroup-conditional conformal coverage.
+Among observations covered by the conformal interval, approximate error metrics were:
 
-Additional limitations will be documented after final experiments.
+| Subset | MAE | RMSE |
+|---|---:|---:|
+| Covered observations | $11,264 | $14,091 |
+| Conformal misses | $66,265 | $104,749 |
 
-## 14. Conclusion
+The largest absolute residual was approximately $594,000.
 
-_To be completed after final evaluation._
+These findings show that a relatively small number of large prediction errors strongly influence RMSE and account for a disproportionate share of the most difficult cases.
+
+Because this analysis uses the already-consumed primary test set, it is interpreted as post-hoc diagnosis rather than confirmatory model selection evidence.
+
+## 11. Temporal stress test
+
+A secondary temporal protocol evaluates the frozen modeling approach under a forward-looking split:
+
+| Partition | Sale years | Rows |
+|---|---|---:|
+| Train | 2006-2008 | 1,941 |
+| Calibration | 2009 | 648 |
+| Test | 2010 | 341 |
+
+The temporal evaluation produced:
+
+| Metric | Result |
+|---|---:|
+| MAE | $16,871.76 |
+| RMSE | $24,855.96 |
+| Empirical coverage | 91.20% |
+| Conformal radius | $36,714.44 |
+| Mean interval width | $73,428.89 |
+
+The temporal conformal rank was 585.
+
+The procedure maintained close-to-target empirical coverage in this specific temporal stress test, although its intervals were wider than in the primary random protocol.
+
+The temporal result should not be interpreted as a distribution-free coverage guarantee under time shift. Exchangeability is not assumed under this evaluation.
+
+Point-error metrics from the temporal and random test sets also should not be treated as a direct model-performance ranking because the two protocols evaluate different observations.
+
+## 12. Conformal sensitivity analysis
+
+A secondary sensitivity analysis evaluated alternative nominal coverage levels without changing the frozen primary point model.
+
+| Nominal coverage | Empirical coverage | Mean interval width |
+|---:|---:|---:|
+| 80% | 78.67% | $43,985.81 |
+| **90%** | **91.47%** | **$65,232.67** |
+| 95% | 95.90% | $89,303.16 |
+
+As expected, higher nominal coverage requires wider prediction intervals.
+
+The 90% configuration remains the project's primary operating point because it was pre-specified before this sensitivity analysis.
+
+The 80% and 95% results are secondary analyses that illustrate the coverage-width trade-off; they are not used to retrospectively select a different primary setting.
+
+## 13. Reproducibility and testing
+
+The repository separates reusable source code, experiment scripts, configuration, tests, reports, and frozen result artifacts.
+
+The project includes automated tests covering areas including:
+
+- data loading and schema behavior;
+- deterministic splitting;
+- preprocessing behavior;
+- leakage controls;
+- model metrics and evaluation utilities;
+- conformal calculations;
+- integration behavior.
+
+At the final pre-release checkpoint:
+
+```text
+python -m ruff check .
+All checks passed.
+
+python -m pytest
+96 passed.
+```
+
+The final repository state is intended to allow the principal experiments and reported results to be inspected and reproduced from version-controlled code and configuration.
+
+## 14. Interpretation
+
+The strongest result of this project is not that one particular model dominates house-price prediction.
+
+Instead, the project demonstrates a controlled workflow in which:
+
+- feature availability is defined before modeling;
+- preprocessing is fitted without evaluation leakage;
+- model selection is restricted to the development partition;
+- the primary selection metric is declared before model comparison;
+- conformal calibration is separated from point-model fitting;
+- the final test set is evaluated only after the primary system is frozen;
+- post-hoc diagnostics are explicitly separated from confirmatory results;
+- reliability is examined beyond aggregate point-prediction metrics.
+
+The point model itself is deliberately conventional. The main emphasis is evaluation reliability and uncertainty-aware prediction.
+
+## 15. Limitations
+
+The study has several important limitations.
+
+First, Ames Housing represents a historical housing market in a single geographic setting. Results therefore should not be assumed to generalize directly to current markets or other regions.
+
+Second, the primary conformal intervals are symmetric and have constant width for all observations within a calibrated evaluation protocol. They do not adapt interval width to property-specific heteroscedasticity.
+
+Third, split conformal prediction provides a marginal coverage target under exchangeability. It does not guarantee correct coverage for every neighborhood, price range, or other subgroup.
+
+Fourth, several subgroup samples are small, which limits the precision of subgroup-level coverage estimates.
+
+Fifth, the temporal experiment is a stress test under distribution shift. Its observed coverage is empirical and does not carry the standard exchangeability-based conformal guarantee.
+
+Sixth, the model comparison is intentionally limited to a small set of baseline and regularized/tree-based model families. The project is not an exhaustive benchmark of boosting, ensembling, or other state-of-the-art tabular methods.
+
+Finally, the primary test set has already served its intended final evaluation role. Findings from post-hoc test diagnostics should not be used to tune the frozen primary system and then be reported as new confirmatory evidence on the same test set.
+
+## 16. Conclusion
+
+This project develops a reproducible uncertainty-aware workflow for tabular house-price regression.
+
+A leakage-safe preprocessing pipeline was combined with deterministic training, calibration, and test partitions. Point-model selection was performed using training-only cross-validation and a pre-specified MAE criterion, resulting in a frozen ElasticNet primary model.
+
+On the held-out primary test set, the model achieved an MAE of $15,957.31 and an RMSE of $33,434.09. The pre-registered 90% split-conformal prediction interval achieved 91.47% empirical coverage with a mean width of $65,232.67.
+
+Post-hoc analysis identified substantial tail errors, subgroup evaluation highlighted variation in empirical neighborhood coverage, and a temporal stress test achieved 91.20% empirical coverage with wider intervals. Sensitivity analysis further demonstrated the expected trade-off between nominal coverage and interval width.
+
+The project therefore serves primarily as an example of disciplined machine-learning evaluation: point accuracy, uncertainty calibration, failure analysis, and distribution-shift robustness are treated as separate but connected parts of the same predictive system.
