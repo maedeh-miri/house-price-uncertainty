@@ -2,7 +2,7 @@
 
 A reproducible machine-learning project for **house-price prediction, uncertainty estimation, subgroup diagnostics, and leakage-safe evaluation**.
 
-> **Status:** Active development — the primary point-prediction model, split-conformal calibration, frozen primary test evaluation, post-hoc diagnostics, temporal stress testing, and conformal sensitivity analysis are complete. Final documentation and release preparation are in progress.
+> **Status:** Released — `v1.0.0` is the first stable release. The primary evaluation, post-hoc diagnostics, temporal stress test, conformal sensitivity analysis, technical report, and release documentation are complete.
 
 ## Why this project exists
 
@@ -14,6 +14,8 @@ A point estimate alone can be misleading. A useful housing model should communic
 This project therefore evaluates not only point-prediction error, but also the empirical coverage and width of prediction intervals, subgroup reliability, and performance under temporal distribution shift.
 
 The primary prediction contract estimates the expected residential market value of a property **before its transaction is finalized**.
+
+For the complete methodology and final findings, see [`reports/technical_report.md`](reports/technical_report.md).
 
 ## Research questions
 
@@ -117,7 +119,7 @@ Two neighborhoods reached the threshold for primary interpretation in the final 
 | CollgCr | 52 | 50 | 96.15% |
 | NAmes | 81 | 79 | 97.53% |
 
-Several smaller neighborhoods showed more variable empirical coverage.
+Several smaller neighborhoods showed more variable empirical coverage. For example, `NridgHt` had 67.57% empirical coverage with `n = 37`, so it is treated as exploratory rather than as a primary subgroup conclusion.
 
 These subgroup results are diagnostic only. Standard split conformal targets **marginal coverage** and does not provide a guarantee of equal conditional coverage within every neighborhood.
 
@@ -181,7 +183,7 @@ The following columns are excluded from the primary predictor matrix:
 
 `Order` and `PID` are retained as metadata rather than predictive features.
 
-Transaction-context variables are excluded from the primary pre-sale model because their availability is not guaranteed at prediction time. They are not assumed to be inherently invalid and may be evaluated later through explicitly defined sensitivity analyses.
+Transaction-context variables are excluded from the primary pre-sale model because their availability is not guaranteed at prediction time. They are not assumed to be inherently invalid and could be studied later through explicitly defined sensitivity analyses.
 
 Feature-availability and semantic-role decisions are documented in:
 
@@ -285,7 +287,7 @@ The completed temporal evaluation produced:
 | Empirical coverage | **91.20%** |
 | Mean interval width | **$73,428.89** |
 
-The result indicates that the conformal uncertainty procedure maintained close-to-target marginal coverage under a forward-looking temporal split.
+The result indicates that the conformal uncertainty procedure achieved close-to-target **empirical coverage** under this forward-looking temporal stress test.
 
 The temporal protocol is a secondary robustness analysis. The usual exchangeability-based split-conformal guarantee is not assumed under temporal distribution shift.
 
@@ -293,25 +295,19 @@ The complete evaluation policy is documented in [`reports/evaluation_protocol.md
 
 Exact row assignments are frozen in [`reports/evaluation_split_manifest.csv`](reports/evaluation_split_manifest.csv).
 
-The complete evaluation policy is documented in [`reports/evaluation_protocol.md`](reports/evaluation_protocol.md).
-
-Exact row assignments are frozen in [`reports/evaluation_split_manifest.csv`](reports/evaluation_split_manifest.csv).
-
-
 ## Conformal sensitivity analysis
 
 A secondary sensitivity analysis evaluated different nominal coverage levels while keeping the frozen point model and conformal procedure unchanged.
 
 | Nominal coverage | Empirical coverage | Mean interval width |
-|---|---:|---:|
+|---:|---:|---:|
 | 80% | 78.67% | $43,985.81 |
-| 90% | 91.47% | $65,232.67 |
+| **90%** | **91.47%** | **$65,232.67** |
 | 95% | 95.90% | $89,303.16 |
 
-The 90% conformal configuration remains the primary uncertainty setting because it provides a practical balance between empirical coverage and interval width.
+The 90% conformal configuration remains the primary uncertainty setting because it was pre-specified before the sensitivity analysis.
 
-The 95% configuration improves coverage at the cost of substantially wider prediction intervals.
-
+The 80% and 95% configurations illustrate the expected trade-off between empirical coverage and interval width. The 95% configuration achieves higher empirical coverage at the cost of substantially wider prediction intervals.
 
 ## Conformal prediction protocol
 
@@ -373,7 +369,7 @@ house-price-uncertainty/
 
 ## Reproducibility and testing
 
-The repository currently contains **96 passing automated tests** covering the core data, feature-schema, splitting, preprocessing, modeling, metric, and conformal utilities.
+The repository contains **96 passing automated tests** covering the core data, feature-schema, splitting, preprocessing, modeling, metric, and conformal utilities.
 
 Run the full validation suite with:
 
@@ -391,9 +387,7 @@ The primary experiment artifacts are machine-readable and committed so that majo
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-
 python -m pip install -e ".[dev]"
-
 python -m ruff check src tests experiments
 python -m pytest
 ```
@@ -403,9 +397,7 @@ python -m pytest
 ```powershell
 python -m venv .venv
 .venv\Scripts\Activate.ps1
-
 python -m pip install -e ".[dev]"
-
 python -m ruff check src tests experiments
 python -m pytest
 ```
@@ -437,6 +429,24 @@ The frozen final primary evaluation is implemented in:
 experiments/final_primary_evaluation.py
 ```
 
+Post-hoc diagnostics are implemented in:
+
+```text
+experiments/posthoc_diagnostics.py
+```
+
+The temporal stress test is implemented in:
+
+```text
+experiments/temporal_stress_test.py
+```
+
+Conformal coverage sensitivity analysis is implemented in:
+
+```text
+experiments/conformal_sensitivity.py
+```
+
 Machine-readable outputs are stored under:
 
 ```text
@@ -448,6 +458,9 @@ Important committed artifacts include:
 ```text
 experiments/results/conformal_calibration_summary.json
 experiments/results/final_primary_test_summary.json
+experiments/results/posthoc_diagnostics_summary.json
+experiments/results/temporal_stress_summary.json
+experiments/results/conformal_sensitivity_summary.json
 ```
 
 ## Example interpretation
@@ -471,7 +484,7 @@ The interval width is constant for the current symmetric absolute-residual confo
 
 ## Project history
 
-This project began as an educational machine-learning exercise and has been redesigned as a reproducible, research-oriented ML project.
+This project began as an educational machine-learning exercise and was redesigned as a reproducible, research-oriented ML project.
 
 The redesign includes:
 
@@ -485,7 +498,10 @@ The redesign includes:
 - split-conformal uncertainty estimation;
 - frozen final test evaluation;
 - subgroup reliability diagnostics;
-- temporal stress testing as a planned secondary analysis.
+- post-hoc residual and tail-error diagnostics;
+- temporal stress testing as a completed secondary robustness analysis;
+- conformal coverage sensitivity analysis across 80%, 90%, and 95% nominal levels;
+- a finalized technical report and stable `v1.0.0` release.
 
 ## What did not work or did not win
 
@@ -509,7 +525,7 @@ The tuned Random Forest achieved the lowest OOF RMSE but did not win on the pre-
 
 The evaluation rule was not changed after observing this result.
 
-## Current limitations
+## Limitations
 
 Current limitations include:
 
@@ -520,9 +536,11 @@ Current limitations include:
 - tail-error analysis showed that a small number of large residuals strongly influence RMSE;
 - temporal evaluation was performed as a secondary stress test rather than as the primary selection protocol;
 - the current primary model does not use a transformed target;
-- the project currently focuses on predictive reliability rather than causal interpretation.
+- the project focuses on predictive reliability rather than causal interpretation;
+- Ames Housing represents a historical housing market in a single geographic setting;
+- the model comparison is deliberately limited and is not an exhaustive benchmark of state-of-the-art tabular methods.
 
-## Current roadmap
+## Project roadmap
 
 - [x] Define the research question and publication standard
 - [x] Create the repository scaffold
@@ -544,9 +562,9 @@ Current limitations include:
 - [x] Complete post-hoc residual and tail-error diagnostics
 - [x] Run the temporal stress-test protocol
 - [x] Run secondary 80% / 90% / 95% coverage sensitivity analysis
-- [ ] Complete the technical report
-- [ ] Finalize release documentation and repository cleanup
-- [ ] Create release `v1.0.0`
+- [x] Complete the technical report
+- [x] Finalize release documentation and repository cleanup
+- [x] Create release `v1.0.0`
 
 ## License
 
