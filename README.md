@@ -102,6 +102,10 @@ Random Forest achieved the lowest OOF RMSE, but MAE had been declared the primar
 
 These OOF results are development estimates and are not presented as final test performance.
 
+![Training-only OOF MAE model comparison](reports/figures/model_selection_oof_mae.png)
+
+*Training-only 5-fold OOF MAE used for point-model selection. ElasticNet was selected under the pre-specified MAE criterion.*
+
 ## Subgroup diagnostics
 
 Neighborhood-level interval coverage is interpreted according to a sample-size policy that was frozen before final evaluation:
@@ -120,6 +124,10 @@ Two neighborhoods reached the threshold for primary interpretation in the final 
 | NAmes | 81 | 79 | 97.53% |
 
 Several smaller neighborhoods showed more variable empirical coverage. For example, `NridgHt` had 67.57% empirical coverage with `n = 37`, so it is treated as exploratory rather than as a primary subgroup conclusion.
+
+![Neighborhood coverage diagnostics](reports/figures/neighborhood_coverage.png)
+
+*Neighborhood-level empirical coverage diagnostics. Primary and exploratory subgroup thresholds are shown separately; these results are diagnostic and do not imply conditional coverage guarantees.*
 
 These subgroup results are diagnostic only. Standard split conformal targets **marginal coverage** and does not provide a guarantee of equal conditional coverage within every neighborhood.
 
@@ -309,6 +317,10 @@ The 90% conformal configuration remains the primary uncertainty setting because 
 
 The 80% and 95% configurations illustrate the expected trade-off between empirical coverage and interval width. The 95% configuration achieves higher empirical coverage at the cost of substantially wider prediction intervals.
 
+![Conformal coverage sensitivity](reports/figures/conformal_sensitivity.png)
+
+*Coverage–width sensitivity on the frozen primary test set. The 90% operating point remains primary because it was pre-specified before test evaluation.*
+
 ## Conformal prediction protocol
 
 The primary uncertainty method is frozen as:
@@ -352,8 +364,10 @@ house-price-uncertainty/
 ├── configs/                 # Model and conformal configuration
 ├── data/                    # Dataset provenance and download instructions
 ├── experiments/             # Reproducible experiments and generated results
+│   └── generate_report_figures.py
 ├── notebooks/               # Exploration and presentation only
-├── reports/                 # Audits, schemas, protocol, and technical report
+├── reports/                 # Audits, schemas, protocol, technical report
+│   └── figures/             # Reproducible PNG/SVG project figures
 ├── src/house_price_uncertainty/
 │   ├── conformal.py         # Split-conformal calibration and intervals
 │   ├── data.py              # Dataset loading and integrity validation
@@ -379,6 +393,8 @@ python -m pytest
 ```
 
 The primary experiment artifacts are machine-readable and committed so that major modeling and evaluation decisions can be audited from Git history.
+
+Project figures are also generated programmatically from committed experiment artifacts rather than manually entered values.
 
 ## Quick start
 
@@ -447,6 +463,19 @@ Conformal coverage sensitivity analysis is implemented in:
 experiments/conformal_sensitivity.py
 ```
 
+Publication- and README-ready project figures are generated from committed result artifacts with:
+
+```bash
+python -m pip install -e ".[analysis]"
+python experiments/generate_report_figures.py
+```
+
+The script writes both high-resolution PNG and vector SVG outputs to:
+
+```text
+reports/figures/
+```
+
 Machine-readable outputs are stored under:
 
 ```text
@@ -462,6 +491,19 @@ experiments/results/posthoc_diagnostics_summary.json
 experiments/results/temporal_stress_summary.json
 experiments/results/conformal_sensitivity_summary.json
 ```
+
+Committed visualization artifacts include:
+
+```text
+reports/figures/model_selection_oof_mae.png
+reports/figures/model_selection_oof_rmse.png
+reports/figures/conformal_sensitivity.png
+reports/figures/neighborhood_coverage.png
+reports/figures/posthoc_top_errors.png
+reports/figures/protocol_coverage_comparison.png
+```
+
+Equivalent SVG versions are committed alongside the PNG files.
 
 ## Example interpretation
 
@@ -501,6 +543,7 @@ The redesign includes:
 - post-hoc residual and tail-error diagnostics;
 - temporal stress testing as a completed secondary robustness analysis;
 - conformal coverage sensitivity analysis across 80%, 90%, and 95% nominal levels;
+- reproducible report figures generated directly from committed experiment artifacts;
 - a finalized technical report and stable `v1.0.0` release.
 
 ## What did not work or did not win
@@ -562,6 +605,7 @@ Current limitations include:
 - [x] Complete post-hoc residual and tail-error diagnostics
 - [x] Run the temporal stress-test protocol
 - [x] Run secondary 80% / 90% / 95% coverage sensitivity analysis
+- [x] Add reproducible report figures
 - [x] Complete the technical report
 - [x] Finalize release documentation and repository cleanup
 - [x] Create release `v1.0.0`
